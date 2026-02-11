@@ -1,7 +1,7 @@
 name: Postman API Tests
 on:
   push:
-    branches: [ main ]
+    branches: [ sm-dev ]
   pull_request:
     branches: [ main ]
 
