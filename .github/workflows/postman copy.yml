@@ -8,7 +8,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 14 * * *'   # Nightly regression (14:00 UTC)
+    - cron: '30 16 * * *'   # Nightly regression (14:00 UTC)
 
 jobs:
 
@@ -19,21 +19,26 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Postman CLI
-        run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-      - name: Login to Postman
-        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Install Newman
+        run: npm install -g newman
 
       - name: Run Smoke Tests (with Retry)
         run: |
-          postman collection run "45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42" \
+          newman run "https://api.getpostman.com/collections/45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42?apikey=${{ secrets.POSTMAN_API_KEY }}" \
           --folder "Smoke" \
-          --retry 2 \
-          --retry-delay 5000 \
           --reporters cli,junit \
           --reporter-junit-export smoke-results.xml \
-          --bail false
+          --delay-request 200 || \
+          newman run "https://api.getpostman.com/collections/45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42?apikey=${{ secrets.POSTMAN_API_KEY }}" \
+          --folder "Smoke" \
+          --reporters cli,junit \
+          --reporter-junit-export smoke-results.xml \
+          --delay-request 200
 
       - name: Upload Smoke Report
         if: always()
@@ -50,20 +55,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install Postman CLI
-        run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
 
-      - name: Login to Postman
-        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+      - name: Install Newman
+        run: npm install -g newman
 
       - name: Run Full Regression (with Retry)
         run: |
-          postman collection run "45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42" \
-          --retry 2 \
-          --retry-delay 5000 \
+          newman run "https://api.getpostman.com/collections/45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42?apikey=${{ secrets.POSTMAN_API_KEY }}" \
           --reporters cli,junit \
           --reporter-junit-export regression-results.xml \
-          --bail false
+          --delay-request 200 || \
+          newman run "https://api.getpostman.com/collections/45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42?apikey=${{ secrets.POSTMAN_API_KEY }}" \
+          --reporters cli,junit \
+          --reporter-junit-export regression-results.xml \
+          --delay-request 200
 
       - name: Upload Regression Report
         if: always()
