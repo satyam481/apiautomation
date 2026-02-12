@@ -1,0 +1,106 @@
+name: API Automation
+
+on:
+  push:
+    branches:
+      - main
+  schedule:
+    - cron: '0 2 * * *'  # Nightly regression
+
+jobs:
+
+  smoke-tests:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      # Install Postman CLI
+      - name: Install Postman CLI
+        run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      # Install Java + Allure
+      - name: Install Allure
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          wget https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.tgz
+          tar -zxvf allure-2.27.0.tgz
+          sudo mv allure-2.27.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
+      - name: Login to Postman
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+
+      # Run Smoke with Retry + JUnit output
+      - name: Run Smoke Tests
+        run: |
+          postman collection run "45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42" \
+          --folder "Smoke" \
+          --retry 2 \
+          --retry-delay 5000 \
+          --reporters cli,junit \
+          --reporter-junit-export smoke-results.xml
+
+      # Generate Allure Report
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          mkdir -p allure-results
+          mv smoke-results.xml allure-results/
+          allure generate allure-results --clean -o allure-report
+
+      # Upload Allure Artifact
+      - name: Upload Smoke Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: smoke-allure-report
+          path: allure-report
+
+
+  regression-tests:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Postman CLI
+        run: curl -o- "https://dl-cli.pstmn.io/install/linux64.sh" | sh
+
+      - name: Install Allure
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-jre
+          wget https://github.com/allure-framework/allure2/releases/latest/download/allure-2.27.0.tgz
+          tar -zxvf allure-2.27.0.tgz
+          sudo mv allure-2.27.0 /opt/allure
+          sudo ln -s /opt/allure/bin/allure /usr/bin/allure
+
+      - name: Login to Postman
+        run: postman login --with-api-key ${{ secrets.POSTMAN_API_KEY }}
+
+      # Run Full Regression with Retry
+      - name: Run Regression Tests
+        run: |
+          postman collection run "45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42" \
+          --retry 2 \
+          --retry-delay 5000 \
+          --reporters cli,junit \
+          --reporter-junit-export regression-results.xml
+
+      - name: Generate Allure Report
+        if: always()
+        run: |
+          mkdir -p allure-results
+          mv regression-results.xml allure-results/
+          allure generate allure-results --clean -o allure-report
+
+      - name: Upload Regression Allure Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: regression-allure-report
+          path: allure-report
