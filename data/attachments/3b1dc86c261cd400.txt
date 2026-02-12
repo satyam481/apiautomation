@@ -1,0 +1,1 @@
+{"transaction":{"id":1299237,"createdAt":"2026-02-12T12:22:43.000Z","fromAccountId":5040812,"toAccountId":5040813,"currency":"COSMIC_COINS","amount":20}}

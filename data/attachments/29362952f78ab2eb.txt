@@ -1,0 +1,6 @@
+{
+    "fromAccountId": 5040812,
+    "toAccountId": 5040813,
+    "amount": 20,
+    "currency": "COSMIC_COINS"
+}

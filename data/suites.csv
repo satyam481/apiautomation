@@ -1,0 +1,18 @@
+"DESCRIPTION","DURATION IN MS","NAME","PARENT SUITE","START TIME","STATUS","STOP TIME","SUB SUITE","SUITE","TEST CLASS","TEST METHOD"
+"Confirm the balance of the `fromAccount` matches the expected value after the transaction.","286","Get Users Current Balance - FromAccount","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Generates another new account (`toAccount`), that the funds will be transferred to, and saves the following information if the request is successful:
+
+- Account owner from the request body (saved as collection variable `e2e_user_name_to`)
+- Account id from the response body (saved as collection variable `e2e_user_account_id_to`)","298","Create A New Account (ToAccount)","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"This request generates a new API key and saves it to the collection variables if the request is successful.","507","Generate a New API Key","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Delete the `toAccount` account to clean up after this test case.","289","Delete The User Account - ToAccount","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Create a new transaction between the `fromAccount` and `toAccount`","301","Create A New Transaction Between The Users","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Delete the `fromAccount` account and clear out the collection variables we created during this test case.","288","Delete The User Account - FromAccount","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Generates a new account (`fromAccount`), that the funds will be transferred from, and saves the following information if the request is successful:
+
+- Account owner from the request body (saved as collection variable `e2e_user_name_from`)
+- Account id from the response body (saved as collection variable `e2e_user_account_id_from`)","294","Create A New Account (FromAccount)","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Get a list of all transactions to and from the `toAccount`","285","Get All Transactions To The ToAccount","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Get a list of all accounts to ensure the accounts were created and saved correctly.","293","Get All User Accounts To Confirm Creation Of Users","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Confirm the balance of the `toAccount` matches the expected value after the transaction.","283","Get Users Current Balance - ToAccount","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""
+"Get the details of an individual transaction, using the first transaction id from the list of transactions obtained in step \[6\].","289","Get A Single Transaction","End to End","2026-02-12","passed","2026-02-12","","Smoke","",""

@@ -1,0 +1,1 @@
+{"account":{"id":5040812,"owner":"Cecilia O'Hara - FromAccount","balance":30,"currency":"COSMIC_COINS","createdAt":"2026-02-12T12:22:43.000Z"}}

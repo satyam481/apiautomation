@@ -1,0 +1,17 @@
+{
+    "Date": "Thu, 12 Feb 2026 12:22:44 GMT",
+    "Content-Type": "application/json; charset=utf-8",
+    "Transfer-Encoding": "chunked",
+    "Connection": "keep-alive",
+    "Content-Encoding": "gzip",
+    "x-frame-options": "deny",
+    "x-xss-protection": "1; mode=block",
+    "x-content-type-options": "nosniff",
+    "referrer-policy": "no-referrer-when-downgrade",
+    "uwebsockets": "20",
+    "x-envoy-upstream-service-time": "11",
+    "cf-cache-status": "DYNAMIC",
+    "Set-Cookie": "_cfuvid=eJND4IabpGAeCA971a5_73tVk6ULN68rXax1idZuZic-1770898964601-0.0.1.1-604800000; path=/; domain=.postman-echo.com; HttpOnly; Secure; SameSite=None",
+    "Server": "cloudflare",
+    "CF-RAY": "9ccc0da07acef13a-ORD"
+}
