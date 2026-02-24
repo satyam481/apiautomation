@@ -14,7 +14,6 @@ permissions:
   contents: write
 
 jobs:
-
   api-tests:
     runs-on: ubuntu-latest
 
@@ -43,19 +42,20 @@ jobs:
 
           COLLECTION_URL="https://api.getpostman.com/collections/45236363-e707068e-ba6a-49f6-8050-0e03bb9a1e42?apikey=${{ secrets.POSTMAN_API_KEY }}"
 
-          # ----------------------------
-          # 🔹 Environment File Support (Currently Disabled)
-          # ----------------------------
+          # -------------------------------------------------
+          # 🔹 Environment File Support (Disabled for now)
+          # -------------------------------------------------
           # ENV_FILE="./environment.postman_environment.json"
+          # EXTRA_ENV="-e $ENV_FILE"
           #
-          # If using GitHub Secret instead:
+          # If using GitHub Secret:
           # echo "${{ secrets.POSTMAN_ENV }}" > env.json
-          # ENV_FILE="env.json"
+          # EXTRA_ENV="-e env.json"
+          # -------------------------------------------------
 
           if [[ "${{ github.event_name }}" == "schedule" ]]; then
             echo "Running Full Regression"
             newman run "$COLLECTION_URL" \
-              # -e "$ENV_FILE" \
               --reporters cli,htmlextra \
               --reporter-htmlextra-export newman-reports/index.html \
               --delay-request 200
@@ -63,7 +63,6 @@ jobs:
             echo "Running Smoke Suite"
             newman run "$COLLECTION_URL" \
               --folder "Smoke" \
-              # -e "$ENV_FILE" \
               --reporters cli,htmlextra \
               --reporter-htmlextra-export newman-reports/index.html \
               --delay-request 200
